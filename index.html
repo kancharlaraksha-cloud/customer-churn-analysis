@@ -212,13 +212,576 @@ select,input{font-family:inherit;}
 @media (max-width:760px){.metric-grid{grid-template-columns:repeat(2,1fr);}}
 
 </style>
+
+<style>
+/* ================================================================
+   FINAL VISUAL THEME — Churn Intelligence
+   Deep-indigo / electric-blue analytics product look
+   ================================================================ */
+:root{
+  --void:#070b16;
+  --panel:#0f1729;
+  --panel-2:#131f35;
+  --panel-3:#182744;
+  --border:#26385a;
+  --border-soft:#1a2945;
+  --text:#eef4ff;
+  --text-dim:#9fb2d2;
+  --text-faint:#667b9f;
+  --teal:#38d9ff;
+  --teal-dim:#0d3548;
+  --amber:#f6c45b;
+  --coral:#ff7188;
+  --violet:#9d8cff;
+  --blue:#5d8dff;
+  --green:#52e0a6;
+  --font-display:'Space Grotesk',sans-serif;
+  --font-body:'Inter',sans-serif;
+  --radius:14px;
+  --shadow:0 18px 45px rgba(0,0,0,.24);
+}
+html{background:var(--void);}
+body{
+  background:
+    radial-gradient(circle at 84% 8%, rgba(93,141,255,.14), transparent 26%),
+    radial-gradient(circle at 15% 0%, rgba(56,217,255,.08), transparent 22%),
+    var(--void);
+}
+.sidebar{
+  background:rgba(12,19,34,.92);
+  border-right:1px solid rgba(87,112,156,.24);
+  box-shadow:18px 0 45px rgba(0,0,0,.12);
+  backdrop-filter:blur(18px);
+}
+.brand{padding:5px 8px 24px;}
+.brand-mark{
+  width:40px;height:40px;border-radius:12px;
+  background:linear-gradient(135deg,#38d9ff,#5d8dff 55%,#9d8cff);
+  color:#07111f;font-weight:800;font-size:14px;letter-spacing:.8px;
+  box-shadow:0 8px 28px rgba(93,141,255,.32);
+  position:relative;
+}
+.brand-mark::after{
+  content:'';position:absolute;right:5px;bottom:5px;width:6px;height:6px;border-radius:50%;
+  background:#fff;box-shadow:0 0 0 4px rgba(255,255,255,.1);
+}
+.brand-name{font-size:16px;}
+.brand-sub{color:#7890b8;}
+.nav-item{border:1px solid transparent;border-radius:10px;}
+.nav-item:hover{background:rgba(93,141,255,.08);color:var(--text);border-color:rgba(93,141,255,.16);}
+.nav-item.active{
+  background:linear-gradient(90deg,rgba(56,217,255,.13),rgba(93,141,255,.13));
+  color:var(--teal);
+  border-color:rgba(56,217,255,.18);
+  box-shadow:inset 3px 0 0 var(--teal);
+}
+.main{max-width:1500px;padding:30px 38px 70px;}
+.page-title{font-size:28px;letter-spacing:-.4px;}
+.page-sub{max-width:700px;color:#8ea5c8;}
+.topbar{margin-bottom:20px;}
+.topbar::after{content:'';display:block;height:1px;flex:1;min-width:100%;background:linear-gradient(90deg,rgba(56,217,255,.22),transparent 70%);margin-top:14px;}
+.btn{background:linear-gradient(180deg,#17263f,#111b30);border-color:#2c4166;box-shadow:0 8px 22px rgba(0,0,0,.12);}
+.btn:hover{border-color:var(--teal);transform:translateY(-1px);}
+.btn.primary{background:linear-gradient(135deg,#38d9ff,#5d8dff);color:#06101f;border-color:transparent;box-shadow:0 10px 30px rgba(93,141,255,.28);}
+.btn.primary:hover{background:linear-gradient(135deg,#59e0ff,#78a1ff);}
+.filterbar,.kpi-card,.chart-card,.table-card,.card,.metric-card{
+  background:linear-gradient(180deg,rgba(16,27,47,.98),rgba(12,21,37,.98));
+  border-color:rgba(70,98,143,.30);
+  box-shadow:var(--shadow);
+}
+.filterbar{padding:17px 18px;}
+.filter-group select,.pred-form select,.explorer-search{
+  background:#0a1222;border-color:#2a3d60;box-shadow:inset 0 0 0 1px rgba(255,255,255,.015);
+}
+.kpi-grid{gap:15px;}
+.kpi-card{padding:17px 17px 15px;border-radius:15px;min-height:112px;}
+.kpi-card .bar{width:4px;box-shadow:0 0 16px currentColor;}
+.kpi-label{font-size:11px;text-transform:uppercase;letter-spacing:.55px;color:#87a0c7;}
+.kpi-value{font-size:29px;letter-spacing:-.5px;}
+.kpi-card:nth-child(1){border-top:2px solid rgba(93,141,255,.5);}
+.kpi-card:nth-child(2){border-top:2px solid rgba(82,224,166,.5);}
+.kpi-card:nth-child(3){border-top:2px solid rgba(255,113,136,.55);}
+.kpi-card:nth-child(4){border-top:2px solid rgba(246,196,91,.55);}
+.kpi-card:nth-child(5){border-top:2px solid rgba(157,140,255,.5);}
+.kpi-card:nth-child(6){border-top:2px solid rgba(56,217,255,.5);}
+.chart-grid{gap:15px;}
+.chart-card{border-radius:15px;}
+.chart-title{font-size:13px;letter-spacing:.05px;}
+.chart-sub{color:#7187ad;}
+.chart-card:hover,.metric-card:hover,.kpi-card:hover{border-color:rgba(93,141,255,.42);transform:translateY(-1px);transition:.18s ease;}
+.about-grid{gap:15px;}
+.card{border-radius:15px;}
+
+/* Hero / stack strip */
+.project-hero{
+  display:flex;align-items:center;justify-content:space-between;gap:18px;
+  padding:18px 20px;margin-bottom:16px;border-radius:16px;
+  background:
+    radial-gradient(circle at 86% 25%,rgba(93,141,255,.18),transparent 28%),
+    linear-gradient(135deg,rgba(56,217,255,.08),rgba(157,140,255,.06));
+  border:1px solid rgba(93,141,255,.20);box-shadow:var(--shadow);
+}
+.hero-left{display:flex;align-items:center;gap:14px;min-width:0;}
+.hero-logo{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(135deg,#38d9ff,#5d8dff,#9d8cff);color:#07111f;font-weight:800;letter-spacing:1px;box-shadow:0 14px 34px rgba(93,141,255,.28);}
+.hero-title{font-family:var(--font-display);font-size:15px;font-weight:700;}
+.hero-copy{font-size:11px;color:#7f96bb;margin-top:3px;}
+.hero-chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;}
+.status-chip{padding:7px 10px;border-radius:999px;font-size:10px;font-weight:700;letter-spacing:.35px;background:rgba(255,255,255,.04);border:1px solid rgba(116,141,180,.22);color:#9fb2d2;}
+.status-chip strong{color:#eaf3ff;}
+.tech-strip{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:0 0 18px;}
+.tech-label{font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:#62799f;font-weight:700;margin-right:2px;}
+.tech-badge{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;border-radius:9px;border:1px solid rgba(79,104,148,.28);background:rgba(14,24,42,.82);font-size:10.5px;font-weight:700;color:#c5d3e9;box-shadow:0 6px 18px rgba(0,0,0,.12);}
+.tech-icon{width:21px;height:21px;border-radius:6px;display:grid;place-items:center;font-size:9px;font-weight:800;color:#07111f;background:#fff;}
+.tech-excel .tech-icon{background:#56d68f}.tech-sql .tech-icon{background:#68a5ff}.tech-powerbi .tech-icon{background:#f6c45b}.tech-js .tech-icon{background:#f7df68}.tech-github .tech-icon{background:#d6e1f1}
+
+/* Prediction polish */
+.prediction-hero{
+  display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;margin-bottom:15px;padding:18px 20px;border-radius:16px;
+  background:linear-gradient(135deg,rgba(93,141,255,.12),rgba(157,140,255,.08));border:1px solid rgba(93,141,255,.22);box-shadow:var(--shadow);
+}
+.prediction-kicker{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#74baff;font-weight:800;}
+.prediction-title{font-family:var(--font-display);font-size:22px;font-weight:700;margin-top:2px;}
+.prediction-copy{font-size:11px;color:#8499bd;margin-top:5px;max-width:680px;}
+.model-badge{padding:10px 12px;border-radius:10px;background:rgba(10,18,34,.72);border:1px solid rgba(93,141,255,.24);text-align:right;min-width:160px;}
+.model-badge small{display:block;color:#6f86ac;font-size:9px;text-transform:uppercase;letter-spacing:.7px;}
+.model-badge strong{display:block;margin-top:3px;font-size:12px;color:#e7f0ff;}
+.metric-grid{gap:12px;}
+.metric-card{border-radius:13px;padding:14px 15px;min-height:94px;}
+.metric-card .metric-label{color:#7187ad;}
+.metric-card .metric-value{font-size:25px;}
+.pred-grid{gap:15px;}
+.pred-result{padding:18px;border-radius:14px;background:linear-gradient(180deg,#0a1324,#09111f);border-color:#294164;}
+.pred-score{font-size:42px;color:#ecf5ff;}
+.pred-progress{height:9px;border-radius:99px;background:#13213a;overflow:hidden;margin-top:12px;border:1px solid rgba(91,117,160,.15);}
+.pred-progress > span{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#38d9ff,#5d8dff,#9d8cff);box-shadow:0 0 18px rgba(93,141,255,.35);}
+.risk-badge{padding:6px 10px;}
+.matrix{margin-top:12px;border-color:#2b4166;}
+.matrix div{background:#111d33;}
+.coef-item{background:#111d33;border-color:#253958;}
+.model-note{color:#8298bc;}
+
+/* Table */
+.data-table th{background:#14223b;color:#8fa7cc;}
+.data-table td{color:#92a7c9;}
+.data-table tr:hover td{background:rgba(93,141,255,.05);}
+
+/* Small footer */
+.project-footer{margin-top:20px;padding:13px 2px;color:#526887;font-size:10px;text-align:center;}
+
+@media (max-width:900px){
+  .main{padding:24px 20px 60px;}
+  .project-hero,.prediction-hero{grid-template-columns:1fr;display:grid;}
+  .hero-chips{justify-content:flex-start;}
+  .model-badge{text-align:left;}
+}
+@media (max-width:760px){
+  .page-title{font-size:22px;}
+  .tech-badge{padding:6px 8px;}
+}
+</style>
+
+
+<style id="light-theme">
+/* ================================================================
+   LIGHT / ELEGANT / CLASSIC THEME
+   Clean ivory canvas, crisp white surfaces, indigo-blue accents.
+   ================================================================ */
+:root{
+  --void:#f4f6fa;
+  --panel:#ffffff;
+  --panel-2:#f7f8fc;
+  --panel-3:#eef2f8;
+  --border:#dbe2ec;
+  --border-soft:#e8edf4;
+  --text:#18212f;
+  --text-dim:#5f6d7e;
+  --text-faint:#8995a6;
+  --teal:#0f766e;
+  --teal-dim:#e7f6f3;
+  --amber:#b7791f;
+  --coral:#c2415d;
+  --violet:#5b4bd6;
+  --blue:#3f63d9;
+  --green:#1f8f63;
+  --font-display:'Space Grotesk',sans-serif;
+  --font-body:'Inter',sans-serif;
+  --radius:13px;
+  --shadow:0 10px 30px rgba(31,45,61,.07);
+}
+html{background:var(--void);}
+body{
+  background:
+    radial-gradient(circle at 85% 0%, rgba(91,75,214,.06), transparent 25%),
+    radial-gradient(circle at 8% 0%, rgba(63,99,217,.05), transparent 22%),
+    linear-gradient(180deg,#f8f9fc 0%,#f4f6fa 100%);
+  color:var(--text);
+}
+::-webkit-scrollbar-track{background:#eef1f6;}
+::-webkit-scrollbar-thumb{background:#c9d2df;border-radius:8px;}
+.sidebar{
+  background:rgba(255,255,255,.94);
+  border-right:1px solid #e3e8ef;
+  box-shadow:12px 0 30px rgba(31,45,61,.05);
+  backdrop-filter:blur(12px);
+}
+.brand-mark,.hero-logo{
+  background:linear-gradient(135deg,#4667d8,#6a57d7 55%,#7b8df2);
+  color:#fff;
+  box-shadow:0 10px 24px rgba(74,87,196,.18);
+}
+.brand-mark::after{background:#fff;box-shadow:0 0 0 4px rgba(255,255,255,.22);}
+.brand-sub{color:#8792a3;}
+.nav-item{color:#667085;}
+.nav-item:hover{background:#f3f6fb;color:#334155;border-color:#e2e8f0;}
+.nav-item.active{
+  background:#eef2ff;
+  color:#4b46b8;
+  border-color:#dfe4ff;
+  box-shadow:inset 3px 0 0 #5b5bd6;
+}
+.sidebar-foot{border-top-color:#edf0f4;}
+.sidebar-foot .row{color:#8b96a6;}
+.main{max-width:1500px;padding:30px 38px 70px;}
+.page-title{color:#172033;}
+.page-sub{color:#667386;}
+.topbar::after{background:linear-gradient(90deg,rgba(91,75,214,.18),transparent 70%);}
+.btn{
+  background:#fff;
+  color:#263244;
+  border-color:#d8e0ea;
+  box-shadow:0 5px 16px rgba(31,45,61,.05);
+}
+.btn:hover{border-color:#7b7dde;background:#fbfbff;transform:translateY(-1px);}
+.btn.primary{
+  background:linear-gradient(135deg,#5a5ed8,#4968cf);
+  color:#fff;border-color:transparent;
+  box-shadow:0 9px 22px rgba(73,104,207,.22);
+}
+.btn.primary:hover{background:linear-gradient(135deg,#666be0,#5572d4);}
+.filterbar,.kpi-card,.chart-card,.table-card,.card,.metric-card{
+  background:rgba(255,255,255,.96);
+  border-color:#e0e6ef;
+  box-shadow:var(--shadow);
+}
+.filterbar{padding:17px 18px;}
+.filter-group label,.metric-card .metric-label{color:#778397;}
+.filter-group select,.pred-form select,.explorer-search{
+  background:#fbfcfe;
+  color:#253246;
+  border-color:#d9e1eb;
+  box-shadow:inset 0 0 0 1px rgba(33,50,70,.015);
+}
+.filter-group select:focus,.pred-form select:focus,.explorer-search:focus{
+  border-color:#8b8fe8;
+  box-shadow:0 0 0 3px rgba(91,75,214,.10);
+}
+.kpi-card{border-radius:14px;min-height:112px;}
+.kpi-card .bar{box-shadow:none;}
+.kpi-label{color:#6e7b8d;}
+.kpi-value{color:#162235;}
+.kpi-card:nth-child(1){border-top:2px solid rgba(63,99,217,.45);}
+.kpi-card:nth-child(2){border-top:2px solid rgba(31,143,99,.45);}
+.kpi-card:nth-child(3){border-top:2px solid rgba(194,65,93,.45);}
+.kpi-card:nth-child(4){border-top:2px solid rgba(183,121,31,.45);}
+.kpi-card:nth-child(5){border-top:2px solid rgba(91,75,214,.45);}
+.kpi-card:nth-child(6){border-top:2px solid rgba(15,118,110,.45);}
+.kpi-card:hover,.chart-card:hover,.metric-card:hover{border-color:#cbd5e1;transform:translateY(-1px);transition:.18s ease;}
+.chart-title{color:#1f2937;}
+.chart-sub{color:#8591a3;}
+.table-card{overflow:hidden;}
+.data-table th{background:#f5f7fb;color:#5e6b7d;border-bottom-color:#dfe5ed;}
+.data-table td{color:#607086;border-bottom-color:#edf0f5;}
+.data-table tr:hover td{background:#f7f8fc;}
+.churn-pill.yes{background:#fdebed;color:#b33b55;}
+.churn-pill.no{background:#e9f7f1;color:#21825f;}
+.pager{border-top-color:#edf0f4;}
+.pager-info{color:#8792a2;}
+.project-hero{
+  background:
+    radial-gradient(circle at 88% 22%,rgba(91,75,214,.10),transparent 24%),
+    linear-gradient(135deg,#ffffff 0%,#f7f8fd 100%);
+  border-color:#e0e5ef;
+  box-shadow:0 14px 34px rgba(31,45,61,.06);
+}
+.hero-copy,.prediction-copy{color:#718095;}
+.status-chip{
+  background:#fff;
+  border-color:#dde4ed;
+  color:#6b7789;
+  box-shadow:0 4px 12px rgba(31,45,61,.04);
+}
+.status-chip strong{color:#27334a;}
+.tech-label{color:#7c8797;}
+.tech-badge{
+  background:#fff;
+  border-color:#dde4ed;
+  color:#425066;
+  box-shadow:0 5px 14px rgba(31,45,61,.04);
+}
+.tech-icon{box-shadow:inset 0 0 0 1px rgba(30,41,59,.06);}
+.prediction-hero{
+  background:linear-gradient(135deg,#ffffff 0%,#f6f7fd 100%);
+  border-color:#e0e5ef;
+  box-shadow:0 14px 34px rgba(31,45,61,.06);
+}
+.prediction-kicker{color:#5b5bd6;}
+.prediction-title{color:#1b2435;}
+.model-badge{background:#fff;border-color:#dfe4ed;}
+.model-badge small{color:#7c8899;}
+.model-badge strong{color:#263246;}
+.metric-card{min-height:94px;}
+.metric-card .metric-label{color:#768296;}
+.metric-card .metric-value{color:#1b2638;}
+.pred-result{background:#fbfcfe;border-color:#e0e6ef;}
+.pred-score{color:#182234;}
+.pred-caption{color:#7d899b;}
+.pred-progress{background:#eef1f6;border-color:#e1e6ee;}
+.pred-progress > span{background:linear-gradient(90deg,#5b5bd6,#4f78d8);box-shadow:none;}
+.risk-high{background:#fdebed;color:#b33b55;}
+.risk-medium{background:#fff6df;color:#a16a14;}
+.risk-low{background:#e8f7f1;color:#21825f;}
+.matrix{border-color:#dde4ed;background:#dde4ed;}
+.matrix div{background:#fff;}
+.matrix .m-label{color:#7e8999;}
+.matrix .m-value{color:#1b2638;}
+.coef-item{background:#f8f9fc;border-color:#e1e6ee;}
+.coef-name{color:#6f7d90;}
+.coef-val{color:#263246;}
+.model-note{color:#78869a;}
+.project-footer{color:#8b96a6;}
+.about-grid .card h3,.about-grid .card h4{color:#1c2637;}
+.about-grid .card p{color:#68768a;}
+
+/* Light chart canvas text/grid colors are supplied by JS; this keeps the
+   surrounding UI consistent while Chart.js renders the labels. */
+</style>
+
+<style id="color-accent-theme">
+/* ================================================================
+   COLOR ACCENT LAYER — brighter, richer, still restrained
+   ================================================================ */
+:root{
+  --accent-indigo:#5b5bd6;
+  --accent-blue:#4f78d8;
+  --accent-mint:#2a9d8f;
+  --accent-coral:#d85b73;
+  --accent-gold:#c89532;
+  --accent-lavender:#7a6de0;
+  --accent-sky:#3f89d9;
+}
+body{
+  background:
+    radial-gradient(circle at 88% 0%, rgba(91,91,214,.10), transparent 22%),
+    radial-gradient(circle at 18% 4%, rgba(63,137,217,.08), transparent 20%),
+    radial-gradient(circle at 72% 42%, rgba(42,157,143,.045), transparent 28%),
+    linear-gradient(180deg,#fbfcfe 0%,#f3f6fa 100%);
+}
+.sidebar{background:rgba(255,255,255,.96);}
+.brand-mark,.hero-logo{
+  background:linear-gradient(135deg,#4f78d8 0%,#5b5bd6 55%,#7a6de0 100%);
+}
+.nav-item.active{
+  background:linear-gradient(90deg,#eff1ff,#f2f5ff);
+  color:#514db8;
+  border-color:#e1e4ff;
+  box-shadow:inset 3px 0 0 #5b5bd6;
+}
+.nav-item.active .ic{color:#5b5bd6;}
+.btn.primary{
+  background:linear-gradient(135deg,#5b5bd6,#4f78d8);
+  box-shadow:0 10px 24px rgba(79,120,216,.20);
+}
+.btn.primary:hover{background:linear-gradient(135deg,#6666df,#5d83de);}
+.filterbar{background:linear-gradient(180deg,#fff,#fbfcff);}
+.project-hero{
+  background:
+    radial-gradient(circle at 88% 16%,rgba(91,91,214,.13),transparent 22%),
+    radial-gradient(circle at 10% 90%,rgba(42,157,143,.07),transparent 25%),
+    linear-gradient(135deg,#ffffff 0%,#f7f9fd 100%);
+}
+.status-chip:nth-child(1){border-color:#dfe3fb;background:#f7f8ff;}
+.status-chip:nth-child(1) strong{color:#5b5bd6;}
+.status-chip:nth-child(2){border-color:#d9eee9;background:#f6fbfa;}
+.status-chip:nth-child(2) strong{color:#2a8f82;}
+.status-chip:nth-child(3){border-color:#f0e5cd;background:#fffaf1;}
+.status-chip:nth-child(3) strong{color:#a87420;}
+.tech-badge:nth-of-type(2){border-color:#dce6fb;background:#f8faff;}
+.tech-badge:nth-of-type(3){border-color:#dce9e8;background:#f8fcfb;}
+.tech-badge:nth-of-type(4){border-color:#f0e5cc;background:#fffdf8;}
+.tech-badge:nth-of-type(5){border-color:#e1ddf8;background:#faf9ff;}
+.tech-badge:nth-of-type(6){border-color:#dde7f2;background:#f8fbfe;}
+.tech-excel .tech-icon{background:#42a87a;color:#fff;}
+.tech-sql .tech-icon{background:#4f78d8;color:#fff;}
+.tech-powerbi .tech-icon{background:#d9a63b;color:#fff;}
+.tech-js .tech-icon{background:#e4c64d;color:#28364b;}
+.tech-github .tech-icon{background:#344054;color:#fff;}
+.kpi-card:nth-child(1){background:linear-gradient(180deg,#fff,#f8faff);border-top-color:#4f78d8;}
+.kpi-card:nth-child(2){background:linear-gradient(180deg,#fff,#f7fcfa);border-top-color:#2a9d8f;}
+.kpi-card:nth-child(3){background:linear-gradient(180deg,#fff,#fff8fa);border-top-color:#d85b73;}
+.kpi-card:nth-child(4){background:linear-gradient(180deg,#fff,#fffaf3);border-top-color:#c89532;}
+.kpi-card:nth-child(5){background:linear-gradient(180deg,#fff,#faf9ff);border-top-color:#7a6de0;}
+.kpi-card:nth-child(6){background:linear-gradient(180deg,#fff,#f7fbff);border-top-color:#3f89d9;}
+.chart-card{background:linear-gradient(180deg,#fff,#fcfdff);}
+.chart-card:nth-child(3n+1){border-top:2px solid rgba(79,120,216,.36);}
+.chart-card:nth-child(3n+2){border-top:2px solid rgba(42,157,143,.30);}
+.chart-card:nth-child(3n){border-top:2px solid rgba(122,109,224,.30);}
+.prediction-hero{
+  background:
+    radial-gradient(circle at 90% 18%,rgba(91,91,214,.12),transparent 24%),
+    linear-gradient(135deg,#ffffff,#f8f9ff);
+}
+.prediction-kicker{color:#5b5bd6;}
+.model-badge{border-color:#dcdff6;background:linear-gradient(180deg,#fff,#fafaff);}
+.metric-grid .metric-card:nth-child(1){border-top:2px solid rgba(79,120,216,.45);}
+.metric-grid .metric-card:nth-child(2){border-top:2px solid rgba(42,157,143,.42);}
+.metric-grid .metric-card:nth-child(3){border-top:2px solid rgba(216,91,115,.42);}
+.metric-grid .metric-card:nth-child(4){border-top:2px solid rgba(200,149,50,.42);}
+.metric-grid .metric-card:nth-child(5){border-top:2px solid rgba(122,109,224,.42);}
+.pred-result{background:linear-gradient(180deg,#fff,#f9fbff);}
+.pred-progress > span{background:linear-gradient(90deg,#3f89d9,#5b5bd6,#7a6de0);}
+.risk-high{background:#fdecef;color:#b43b57;border-color:#f2ced7;}
+.risk-medium{background:#fff7e3;color:#9b6b15;border-color:#f0e0b6;}
+.risk-low{background:#eaf8f3;color:#1f8068;border-color:#cceadf;}
+.matrix div:nth-child(1){background:#f7fbff;}
+.matrix div:nth-child(2){background:#fffaf9;}
+.matrix div:nth-child(3){background:#fffaf3;}
+.matrix div:nth-child(4){background:#f5fbf8;}
+.matrix .m-value{color:#243247;}
+.about-grid .card:first-child{border-top:2px solid rgba(79,120,216,.4);}
+.about-grid .card:nth-child(2){border-top:2px solid rgba(122,109,224,.4);}
+.about-grid .card .tag{background:#f4f6fb;border-color:#dfe5ee;color:#647188;}
+/* Accent the buttons without turning the page into a rainbow. */
+.topbar-actions .btn:not(.primary){border-left:3px solid #4f78d8;}
+#btnUploadDash{border-left-color:#2a9d8f !important;}
+#btnRunPrediction{border-left:3px solid #7a6de0;}
+.project-footer{border-top:1px solid #e8ecf2;padding-top:15px;}
+</style>
+
+<style id="readability-pass">
+/* ================================================================
+   READABILITY PASS — clearer typography + more comfortable sizing
+   ================================================================ */
+body{font-size:15px;line-height:1.58;}
+.sidebar{padding:24px 17px;}
+.brand-name{font-size:17px;}
+.brand-sub{font-size:12px;}
+.nav{gap:4px;margin-top:8px;}
+.nav-item{padding:11px 13px;font-size:14.5px;gap:12px;}
+.nav-item .ic{font-size:17px;width:20px;}
+.sidebar-foot .row{font-size:12px;padding-top:9px;}
+.main{padding:32px 40px 74px;}
+.topbar{gap:24px;margin-bottom:24px;}
+.page-title{font-size:30px;letter-spacing:-.5px;}
+.page-sub{font-size:14px;line-height:1.55;max-width:760px;}
+.btn{font-size:14px;padding:10px 16px;}
+
+.filterbar{padding:18px 20px;margin-bottom:22px;gap:13px;}
+.filter-group{gap:6px;min-width:150px;}
+.filter-group label{font-size:11px;letter-spacing:.65px;}
+.filter-group select,.pred-form select{font-size:14px;padding:9px 11px;min-height:40px;}
+.filter-note{font-size:12.5px;}
+
+.kpi-grid{gap:16px;margin-bottom:22px;}
+.kpi-card{padding:18px 18px 16px;min-height:118px;}
+.kpi-label{font-size:12px;letter-spacing:.6px;}
+.kpi-value{font-size:30px;margin-top:7px;}
+.kpi-delta{font-size:12px;margin-top:5px;}
+
+.chart-grid{gap:16px;}
+.chart-card{padding:18px;min-height:250px;}
+.chart-title{font-size:14.5px;line-height:1.35;}
+.chart-sub{font-size:12px;line-height:1.45;margin-bottom:10px;}
+.chart-wrap{min-height:175px;}
+
+.project-hero{padding:20px 22px;margin-bottom:18px;}
+.hero-left{gap:16px;}
+.hero-logo{width:52px;height:52px;border-radius:16px;}
+.hero-title{font-size:17px;line-height:1.35;}
+.hero-copy{font-size:12.5px;line-height:1.5;margin-top:4px;}
+.hero-chips{gap:9px;}
+.status-chip{padding:8px 11px;font-size:11px;}
+.tech-strip{gap:10px;margin-bottom:20px;}
+.tech-label{font-size:11px;letter-spacing:.75px;}
+.tech-badge{padding:8px 11px;font-size:11.5px;}
+.tech-icon{width:23px;height:23px;font-size:9.5px;}
+
+.prediction-hero{padding:20px 22px;margin-bottom:17px;gap:20px;}
+.prediction-kicker{font-size:11px;}
+.prediction-title{font-size:24px;line-height:1.25;}
+.prediction-copy{font-size:12.5px;line-height:1.55;}
+.model-badge{padding:11px 13px;min-width:175px;}
+.model-badge small{font-size:10px;}
+.model-badge strong{font-size:13px;}
+.metric-grid{gap:14px;margin-bottom:16px;}
+.metric-card{padding:16px;min-height:104px;}
+.metric-card .metric-label{font-size:11.5px;}
+.metric-card .metric-value{font-size:26px;margin-top:7px;}
+.pred-grid{gap:16px;}
+.pred-form{gap:13px;}
+.pred-form label{font-size:12px;}
+.pred-result{padding:20px;}
+.pred-score{font-size:44px;}
+.pred-caption{font-size:12px;}
+.risk-badge{font-size:12px;padding:6px 10px;}
+.matrix{margin-top:13px;}
+.matrix div{padding:13px;}
+.matrix .m-label{font-size:11px;}
+.matrix .m-value{font-size:22px;}
+.coef-list{gap:9px;margin-top:11px;}
+.coef-item{padding:10px 11px;font-size:12px;}
+.model-note{font-size:12.5px;line-height:1.65;}
+
+.explorer-toolbar{gap:11px;margin-bottom:15px;}
+.explorer-search{font-size:14px;padding:11px 13px;min-height:42px;}
+.explorer-meta{font-size:12.5px;}
+.data-table{font-size:13px;}
+.data-table th{font-size:11px;padding:12px 13px;letter-spacing:.45px;}
+.data-table td{font-size:12.5px;padding:11px 13px;}
+.churn-pill{font-size:11px;padding:4px 8px;}
+.pager{padding:13px 15px;}
+.pager-info{font-size:12px;}
+
+.about-grid{gap:16px;}
+.about-grid .card h3,.about-grid .card h4{font-size:17px;line-height:1.35;}
+.about-grid .card p{font-size:14px;line-height:1.65;}
+.about-grid .card .tag{font-size:12px;}
+.project-footer{font-size:11px;line-height:1.5;}
+
+/* Don't over-scale smaller screens. Keep text readable while preserving fit. */
+@media (max-width:1180px){
+  .main{padding:28px 28px 64px;}
+  .page-title{font-size:28px;}
+  .chart-card{min-height:240px;}
+}
+@media (max-width:760px){
+  body{font-size:14px;}
+  .sidebar{padding:12px 13px;}
+  .brand-name{font-size:16px;}
+  .nav-item{font-size:14px;padding:10px 12px;}
+  .main{padding:22px 16px 54px;}
+  .page-title{font-size:24px;}
+  .page-sub{font-size:13px;}
+  .kpi-grid{gap:12px;}
+  .kpi-card{padding:15px;min-height:108px;}
+  .kpi-label{font-size:11px;}
+  .kpi-value{font-size:26px;}
+  .chart-card{padding:15px;min-height:220px;}
+  .chart-title{font-size:14px;}
+  .chart-sub{font-size:11.5px;}
+  .chart-wrap{min-height:160px;}
+  .hero-title{font-size:16px;}
+  .hero-copy{font-size:12px;}
+  .prediction-title{font-size:22px;}
+}
+</style>
+
 </head>
 <body>
 
 <div class="shell">
   <aside class="sidebar">
     <div class="brand">
-      <div class="brand-mark">📡</div>
+      <div class="brand-mark" aria-label="Churn Intelligence logo">CI</div>
       <div>
         <div class="brand-name">Churn Intelligence</div>
         <div class="brand-sub">Subscription Analytics</div>
@@ -239,15 +802,39 @@ select,input{font-family:inherit;}
 
     <!-- ============ DASHBOARD ============ -->
     <section class="panel active" id="panel-dashboard">
+      <div class="project-hero">
+        <div class="hero-left">
+          <div class="hero-logo">CI</div>
+          <div>
+            <div class="hero-title">Churn Intelligence · Subscription Analytics</div>
+            <div class="hero-copy">Behavior-aware customer churn analysis with interactive exploration and predictive scoring.</div>
+          </div>
+        </div>
+        <div class="hero-chips">
+          <span class="status-chip"><strong>963</strong> customers</span>
+          <span class="status-chip"><strong>17.5%</strong> base churn</span>
+          <span class="status-chip"><strong>Predictive</strong> + exploratory</span>
+        </div>
+      </div>
+
       <div class="topbar">
         <div>
           <div class="page-title">Churn Analytics Dashboard</div>
-          <div class="page-sub">Subscription service customer base — engagement, billing, retention and churn risk at a glance.</div>
+          <div class="page-sub">Explore customer behavior, subscription patterns, churn segments and model-ready signals in one place.</div>
         </div>
         <div class="topbar-actions">
           <button class="btn" id="btnUploadDash">⇪ Upload dataset (.xlsx / .csv)</button>
           <input type="file" id="fileInput" class="file-input" accept=".xlsx,.xls,.csv">
         </div>
+      </div>
+
+      <div class="tech-strip" aria-label="Technology stack">
+        <span class="tech-label">Built with</span>
+        <span class="tech-badge tech-excel"><span class="tech-icon">XL</span>Excel</span>
+        <span class="tech-badge tech-sql"><span class="tech-icon">SQL</span>SQL Server</span>
+        <span class="tech-badge tech-powerbi"><span class="tech-icon">BI</span>Power BI</span>
+        <span class="tech-badge tech-js"><span class="tech-icon">JS</span>JavaScript</span>
+        <span class="tech-badge tech-github"><span class="tech-icon">GH</span>GitHub Pages</span>
       </div>
 
       <div id="uploadNotice"></div>
@@ -261,25 +848,27 @@ select,input{font-family:inherit;}
 
     <!-- ============ PREDICTION ============ -->
     <section class="panel" id="panel-prediction">
-      <div class="topbar">
+      <div class="prediction-hero">
         <div>
-          <div class="page-title">Churn Prediction</div>
-          <div class="page-sub">A lightweight logistic-regression model trained in the browser on the current labeled dataset.</div>
+          <div class="prediction-kicker">Predictive analytics</div>
+          <div class="prediction-title">Churn Prediction Studio</div>
+          <div class="prediction-copy">Use the current labeled customer dataset to estimate churn probability for an existing customer record. The score is a model estimate, not a guarantee.</div>
         </div>
+        <div class="model-badge"><small>Model</small><strong>Logistic Regression</strong><small style="margin-top:6px;">Validation</small><strong>Stratified 80 / 20</strong></div>
       </div>
 
       <div class="metric-grid" id="modelMetrics"></div>
 
       <div class="pred-grid">
         <div class="card">
-          <h3>Score a customer record</h3>
-          <p class="model-note">Select an existing customer profile and run the model. The model uses the customer attributes, not the known Churn value, to generate an estimated churn score.</p>
+          <h3>Score a customer</h3>
+          <p class="model-note">Select an existing customer profile and estimate its churn probability. The model uses the customer attributes, not the known Churn value, to generate an estimated churn score.</p>
           <div class="pred-form">
             <label>Customer record
               <select id="predCustomerSelect"></select>
             </label>
           </div>
-          <button class="btn primary" id="btnRunPrediction" style="margin-top:14px;">Run churn prediction</button>
+          <button class="btn primary" id="btnRunPrediction" style="margin-top:14px;">✦ Run prediction</button>
           <div id="predictionResult" class="pred-result"></div>
         </div>
 
@@ -291,7 +880,7 @@ select,input{font-family:inherit;}
       </div>
 
       <div class="card">
-        <h3>Model summary</h3>
+        <h3>How the model works</h3>
         <div id="modelSummary" class="model-note"></div>
         <div id="coefList" class="coef-list"></div>
       </div>
@@ -358,7 +947,7 @@ select,input{font-family:inherit;}
 
         <div class="card">
           <h3>Analysis & methodology</h3>
-          <p>This dashboard presents a descriptive and exploratory analysis of customer churn. It examines how churn varies across subscription, billing, tenure, engagement, viewing behaviour, support activity, satisfaction and customer-profile segments.</p>
+          <p>This dashboard presents descriptive, exploratory and predictive analysis of customer churn. It examines how churn varies across subscription, billing, tenure, engagement, viewing behaviour, support activity, satisfaction and customer-profile segments.</p>
           <div class="dl">
             <dt>Approach</dt><dd>Descriptive, exploratory and predictive analytics</dd>
             <dt>Target variable</dt><dd>Churn (1 = churned, 0 = retained)</dd>
@@ -376,6 +965,7 @@ select,input{font-family:inherit;}
       </div>
     </section>
 
+    <div class="project-footer">Churn Intelligence · Behavior-Aware Customer Churn Analysis · Descriptive, exploratory and predictive analytics</div>
   </main>
 </div>
 
@@ -411,8 +1001,8 @@ const FILTER_FIELDS = [
 const TENURE_ORDER = ['0-12 months','13-24 months','25-48 months','49-72 months','73+ months'];
 const LEVEL_ORDER = ['Low','Medium','High'];
 const SUPPORT_ORDER = ['None','Low','Medium','High'];
-const COLORS = { teal:'#2dd4bf', amber:'#f5a623', coral:'#fb6a6a', violet:'#9b8cfb', dim:'#8fa0c0' };
-const PALETTE = ['#2dd4bf','#9b8cfb','#f5a623','#fb6a6a','#6ea8fe','#63e6be','#e599f7'];
+const COLORS = { teal:'#0f766e', amber:'#b7791f', coral:'#c2415d', violet:'#5b4bd6', dim:'#6b7a90' };
+const PALETTE = ['#5b4bd6','#4f78d8','#0f766e','#c78b2c','#c2415d','#6c7ee8','#5b9bd5'];
 
 let charts = {}; // holds Chart.js instances so we can destroy/redraw on filter change
 
@@ -576,10 +1166,10 @@ function destroyChart(id){ if (charts[id]){ charts[id].destroy(); delete charts[
 function baseGridOptions(){
   return {
     scales:{
-      x:{ ticks:{ color:'#8fa0c0', font:{size:10} }, grid:{ color:'#1a2740' } },
-      y:{ ticks:{ color:'#8fa0c0', font:{size:10} }, grid:{ color:'#1a2740' }, beginAtZero:true }
+      x:{ ticks:{ color:'#65748a', font:{size:11} }, grid:{ color:'#e7ebf1' } },
+      y:{ ticks:{ color:'#65748a', font:{size:11} }, grid:{ color:'#e7ebf1' }, beginAtZero:true }
     },
-    plugins:{ legend:{ display:false }, tooltip:{ backgroundColor:'#152238', borderColor:'#22314d', borderWidth:1 } },
+    plugins:{ legend:{ display:false }, tooltip:{ backgroundColor:'#1f2937', borderColor:'#cfd8e5', borderWidth:1, titleColor:'#ffffff', bodyColor:'#f8fafc' } },
     maintainAspectRatio:false,
     responsive:true
   };
@@ -672,8 +1262,8 @@ function renderCharts(){
   {
     const d = countBy(rows,'ContentType');
     charts.chContent = new Chart(document.getElementById('chContent'),{ type:'doughnut',
-      data:{ labels:d.labels, datasets:[{ data:d.counts, backgroundColor:PALETTE, borderColor:'#111a2c', borderWidth:2 }]},
-      options:{ plugins:{ legend:{ position:'bottom', labels:{ color:'#8fa0c0', font:{size:10}, boxWidth:10 } } }, maintainAspectRatio:false, responsive:true } });
+      data:{ labels:d.labels, datasets:[{ data:d.counts, backgroundColor:PALETTE, borderColor:'#ffffff', borderWidth:2 }]},
+      options:{ plugins:{ legend:{ position:'bottom', labels:{ color:'#667386', font:{size:11}, boxWidth:10 } } }, maintainAspectRatio:false, responsive:true } });
   }
   // Value tier
   {
@@ -712,14 +1302,14 @@ function renderCharts(){
   {
     const d = countBy(rows,'DeviceRegistered');
     charts.chDevice = new Chart(document.getElementById('chDevice'),{ type:'doughnut',
-      data:{ labels:d.labels, datasets:[{ data:d.counts, backgroundColor:PALETTE, borderColor:'#111a2c', borderWidth:2 }]},
-      options:{ plugins:{ legend:{ position:'bottom', labels:{ color:'#8fa0c0', font:{size:10}, boxWidth:10 } } }, maintainAspectRatio:false, responsive:true } });
+      data:{ labels:d.labels, datasets:[{ data:d.counts, backgroundColor:PALETTE, borderColor:'#ffffff', borderWidth:2 }]},
+      options:{ plugins:{ legend:{ position:'bottom', labels:{ color:'#667386', font:{size:11}, boxWidth:10 } } }, maintainAspectRatio:false, responsive:true } });
   }
   }catch(err){ console.warn('dashboard chart render failed', err); }
 }
 function withPctTooltip(opt){
   const o = JSON.parse(JSON.stringify(opt));
-  o.plugins.tooltip = { backgroundColor:'#152238', borderColor:'#22314d', borderWidth:1,
+  o.plugins.tooltip = { backgroundColor:'#1f2937', borderColor:'#cfd8e5', borderWidth:1, titleColor:'#ffffff', bodyColor:'#f8fafc',
     callbacks:{ label:(ctx)=> ctx.formattedValue + '% churn' } };
   o.scales.y.ticks.callback = (v)=> v+'%';
   return o;
@@ -953,10 +1543,10 @@ function renderPredictionPanel(){
     <div><div class="m-label">True Positive</div><div class="m-value">${fmtNum(m.tp)}</div></div>
   </div>`;
 
-  summary.innerHTML=`Model: <strong>Logistic Regression</strong><br>
+  summary.innerHTML=`<strong>Model:</strong> Logistic Regression · <strong>Validation:</strong> stratified 80/20 holdout<br>
     Training rows: <strong>${fmtNum(state.model.trainCount)}</strong> · Holdout rows: <strong>${fmtNum(state.model.testCount)}</strong> · Features used: <strong>${fmtNum(state.model.featureState.featureNames.length)}</strong><br>
-    Decision threshold: <strong>${fmtPct(state.model.threshold)}</strong>. Lowering the threshold is intended to flag more potential churn cases; it does not prove that a customer will churn.<br>
-    The scores are generated from historical labeled data and should be treated as model estimates, not causal conclusions or guarantees.`;
+    Decision threshold: <strong>${fmtPct(state.model.threshold)}</strong>. A lower threshold flags more potential churn cases; it does not prove that a customer will churn.<br>
+    Scores are model estimates derived from historical labeled data and should not be interpreted as causal conclusions or guarantees.`;
 
   const top=state.model.coefficients.slice(0,8);
   coefList.innerHTML=top.map(c=>`<div class="coef-item"><span class="coef-name" title="${c.name}">${c.name}</span><span class="coef-val">${c.value>=0?'+':''}${c.value.toFixed(2)}</span></div>`).join('');
@@ -976,9 +1566,12 @@ function runPrediction(){
   const tier=p>=.50?'High':(p>=state.model.threshold?'Medium':'Low');
   const cls=tier==='High'?'risk-high':tier==='Medium'?'risk-medium':'risk-low';
   result.classList.add('show');
-  result.innerHTML=`<div class="pred-caption">Model-estimated churn score for <strong>${String(row.CustomerID??'Selected customer')}</strong></div>
+  const safeId = String(row.CustomerID??'Selected customer');
+  result.innerHTML=`<div class="pred-caption">Model-estimated churn score · <strong>${safeId}</strong></div>
     <div class="pred-score">${fmtPct(p)}</div>
-    <div class="risk-badge ${cls}">${tier} Risk · ${label}</div>`;
+    <div class="pred-progress" aria-label="Estimated churn probability"><span style="width:${Math.max(2,Math.min(100,p*100))}%"></span></div>
+    <div class="risk-badge ${cls}">${tier} Risk · ${label}</div>
+    <div class="pred-caption" style="margin-top:10px;">Threshold: ${fmtPct(state.model.threshold)} · Score uses customer attributes only; the known churn label is not used for scoring.</div>`;
 }
 
 function trainAndRenderPrediction(){
