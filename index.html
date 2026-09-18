@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Churn Intelligence — Subscription Analytics</title>
+<title>Churn Intelligence — Subscription Analytics & Prediction</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📡</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -180,6 +180,37 @@ select,input{font-family:inherit;}
 .pager-info{color:var(--text-faint);font-size:11px;margin-right:auto;}
 @media (max-width:760px){.explorer-search{min-width:180px;width:100%;}.explorer-meta{width:100%;}}
 
+
+
+/* ---------- prediction model ---------- */
+.pred-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:14px;margin-bottom:14px;}
+.metric-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:14px;}
+.metric-card{background:var(--panel);border:1px solid var(--border-soft);border-radius:var(--radius);padding:15px;position:relative;overflow:hidden;}
+.metric-card .metric-label{font-size:10.5px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.55px;font-weight:600;}
+.metric-card .metric-value{font-family:var(--font-display);font-size:24px;font-weight:600;margin-top:6px;}
+.pred-form{display:grid;grid-template-columns:1fr;gap:12px;}
+.pred-form label{font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.5px;font-weight:600;}
+.pred-form select{width:100%;background:var(--void);border:1px solid var(--border);color:var(--text);border-radius:7px;padding:9px 10px;font-size:13px;margin-top:5px;}
+.pred-result{margin-top:14px;padding:16px;border-radius:10px;background:var(--void);border:1px solid var(--border);display:none;}
+.pred-result.show{display:block;}
+.pred-score{font-family:var(--font-display);font-size:36px;font-weight:600;}
+.pred-caption{font-size:11px;color:var(--text-faint);margin-top:2px;}
+.risk-badge{display:inline-block;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:700;margin-top:9px;}
+.risk-high{background:rgba(251,106,106,.14);color:var(--coral);}
+.risk-medium{background:rgba(245,166,35,.14);color:var(--amber);}
+.risk-low{background:rgba(45,212,191,.12);color:var(--teal);}
+.matrix{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-top:10px;}
+.matrix div{background:var(--panel-2);padding:12px;text-align:center;}
+.matrix .m-label{font-size:10px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.4px;}
+.matrix .m-value{font-family:var(--font-display);font-size:21px;font-weight:600;margin-top:4px;}
+.coef-list{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px;}
+.coef-item{background:var(--panel-2);border:1px solid var(--border-soft);border-radius:8px;padding:9px 10px;font-size:11px;display:flex;justify-content:space-between;gap:8px;}
+.coef-name{color:var(--text-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.coef-val{font-weight:700;color:var(--text);}
+.model-note{font-size:11.5px;color:var(--text-faint);line-height:1.6;}
+@media (max-width:1180px){.metric-grid{grid-template-columns:repeat(3,1fr);}.pred-grid{grid-template-columns:1fr;}.coef-list{grid-template-columns:1fr;}}
+@media (max-width:760px){.metric-grid{grid-template-columns:repeat(2,1fr);}}
+
 </style>
 </head>
 <body>
@@ -195,6 +226,7 @@ select,input{font-family:inherit;}
     </div>
     <nav class="nav">
       <button class="nav-item active" data-panel="dashboard"><span class="ic">◧</span>Dashboard</button>
+      <button class="nav-item" data-panel="prediction"><span class="ic">🧠</span>Prediction</button>
       <button class="nav-item" data-panel="explorer"><span class="ic">▦</span>Data Explorer</button>
       <button class="nav-item" data-panel="about"><span class="ic">ℹ</span>About</button>
     </nav>
@@ -210,7 +242,7 @@ select,input{font-family:inherit;}
       <div class="topbar">
         <div>
           <div class="page-title">Churn Analytics Dashboard</div>
-          <div class="page-sub">Subscription service customer base — engagement, billing and retention at a glance.</div>
+          <div class="page-sub">Subscription service customer base — engagement, billing, retention and churn risk at a glance.</div>
         </div>
         <div class="topbar-actions">
           <button class="btn" id="btnUploadDash">⇪ Upload dataset (.xlsx / .csv)</button>
@@ -225,6 +257,44 @@ select,input{font-family:inherit;}
       <div class="kpi-grid" id="kpiGrid"></div>
 
       <div class="chart-grid" id="chartGrid"></div>
+    </section>
+
+    <!-- ============ PREDICTION ============ -->
+    <section class="panel" id="panel-prediction">
+      <div class="topbar">
+        <div>
+          <div class="page-title">Churn Prediction</div>
+          <div class="page-sub">A lightweight logistic-regression model trained in the browser on the current labeled dataset.</div>
+        </div>
+      </div>
+
+      <div class="metric-grid" id="modelMetrics"></div>
+
+      <div class="pred-grid">
+        <div class="card">
+          <h3>Score a customer record</h3>
+          <p class="model-note">Select an existing customer profile and run the model. The model uses the customer attributes, not the known Churn value, to generate an estimated churn score.</p>
+          <div class="pred-form">
+            <label>Customer record
+              <select id="predCustomerSelect"></select>
+            </label>
+          </div>
+          <button class="btn primary" id="btnRunPrediction" style="margin-top:14px;">Run churn prediction</button>
+          <div id="predictionResult" class="pred-result"></div>
+        </div>
+
+        <div class="card">
+          <h3>Model evaluation</h3>
+          <p class="model-note">The holdout metrics below are calculated from a stratified 80/20 split. The default decision threshold is 25% to flag more potential churn cases; ROC-AUC is threshold-independent.</p>
+          <div id="confusionMatrix"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Model summary</h3>
+        <div id="modelSummary" class="model-note"></div>
+        <div id="coefList" class="coef-list"></div>
+      </div>
     </section>
 
     <!-- ============ DATA EXPLORER ============ -->
@@ -290,14 +360,16 @@ select,input{font-family:inherit;}
           <h3>Analysis & methodology</h3>
           <p>This dashboard presents a descriptive and exploratory analysis of customer churn. It examines how churn varies across subscription, billing, tenure, engagement, viewing behaviour, support activity, satisfaction and customer-profile segments.</p>
           <div class="dl">
-            <dt>Approach</dt><dd>Descriptive and exploratory analytics</dd>
+            <dt>Approach</dt><dd>Descriptive, exploratory and predictive analytics</dd>
             <dt>Target variable</dt><dd>Churn (1 = churned, 0 = retained)</dd>
             <dt>Analysis areas</dt><dd>Subscription, engagement, behaviour and customer profile</dd>
             <dt>Segmentation</dt><dd>Tenure, engagement, support load, satisfaction and value tiers</dd>
-            <dt>Visualization</dt><dd>Churn rates and customer distributions by segment</dd>
+            <dt>Visualization</dt><dd>Churn rates, customer distributions and model outputs</dd>
+            <dt>Prediction model</dt><dd>Logistic Regression</dd>
+            <dt>Validation</dt><dd>Stratified 80/20 holdout</dd>
           </div>
           <h4>Limitations</h4>
-          <p>The dashboard identifies observed patterns and associations in the dataset. These relationships should not be interpreted as proof that a particular factor causes churn.</p>
+          <p>The dashboard identifies observed patterns and associations in the dataset. These relationships should not be interpreted as proof that a particular factor causes churn. The prediction model provides an estimated churn score from historical data and is intended for demonstration and exploratory use, not as a production decision system.</p>
           <h4>Data explorer uploads</h4>
           <p>You can upload your own .xlsx/.csv file from the Dashboard or Data Explorer tab. The KPIs, charts and explorer update using the loaded data.</p>
         </div>
@@ -458,7 +530,7 @@ function renderKPIs(){
 
   const cards = [
     { label:'Total customers', value: fmtNum(total), color:COLORS.dim },
-    { label:'Active customers', value: fmtNum(active), color:COLORS.teal },
+    { label:'Retained customers', value: fmtNum(active), color:COLORS.teal },
     { label:'Churned customers', value: fmtNum(churned), color:COLORS.coral },
     { label:'Churn rate', value: fmtPct(churnRate), color: churnRate>0.25?COLORS.coral:COLORS.amber },
     { label:'Avg. monthly charge', value: '$'+avgCharge.toFixed(2), color:COLORS.violet },
@@ -521,7 +593,7 @@ function renderCharts(){
   const chartGrid = document.getElementById('chartGrid');
   if (!chartLibAvailable()){
     chartGrid.innerHTML = `<div class="chart-card span2"><div class="chart-title">Charts unavailable</div>
-      <div class="chart-sub">The Chart.js library (loaded from cdnjs.cloudflare.com) didn't load — check your internet connection or whether the CDN is blocked on this network. KPIs, the prediction model and the data explorer below are unaffected.</div></div>`;
+      <div class="chart-sub">The Chart.js library (loaded from cdnjs.cloudflare.com) didn't load — check your internet connection or whether the CDN is blocked on this network. KPIs, prediction tools and the data explorer may still work, but the charts need Chart.js to load.</div></div>`;
     return;
   }
   if (!state.hasChurnColumn){
@@ -538,28 +610,28 @@ function renderCharts(){
   }
 
   chartGrid.innerHTML = `
-    <div class="chart-card"><div class="chart-title">Churn rate by subscription plan</div><div class="chart-sub">Basic / Standard / Premium / Unknown</div>
+    <div class="chart-card"><div class="chart-title">Churn Rate by Subscription Type</div><div class="chart-sub">Basic / Standard / Premium / Unknown</div>
       <div class="chart-wrap"><canvas id="chSub"></canvas></div></div>
-    <div class="chart-card"><div class="chart-title">Churn rate by payment method</div><div class="chart-sub">Includes "Not Recorded"</div>
+    <div class="chart-card"><div class="chart-title">Churn Rate by Payment Method</div><div class="chart-sub">Includes "Not Recorded"</div>
       <div class="chart-wrap"><canvas id="chPay"></canvas></div></div>
-    <div class="chart-card"><div class="chart-title">Churn rate by tenure</div><div class="chart-sub">Account age bucketed</div>
+    <div class="chart-card"><div class="chart-title">Churn Rate by Tenure Band</div><div class="chart-sub">Account age bucketed</div>
       <div class="chart-wrap"><canvas id="chTenure"></canvas></div></div>
 
-    <div class="chart-card"><div class="chart-title">Churn rate by engagement level</div><div class="chart-sub">Viewing hours + downloads composite</div>
+    <div class="chart-card"><div class="chart-title">Churn Rate by Engagement Level</div><div class="chart-sub">Viewing hours + downloads composite</div>
       <div class="chart-wrap"><canvas id="chEngage"></canvas></div></div>
-    <div class="chart-card"><div class="chart-title">Customer mix by content type</div><div class="chart-sub">Share of customer base</div>
+    <div class="chart-card"><div class="chart-title">Customer Distribution by Content Type</div><div class="chart-sub">Share of customer base</div>
       <div class="chart-wrap"><canvas id="chContent"></canvas></div></div>
-    <div class="chart-card"><div class="chart-title">Churn rate by value tier</div><div class="chart-sub">Tertiles of monthly charge</div>
+    <div class="chart-card"><div class="chart-title">Churn Rate by Customer Value Tier</div><div class="chart-sub">Tertiles of monthly charge</div>
       <div class="chart-wrap"><canvas id="chValue"></canvas></div></div>
 
-    <div class="chart-card span2"><div class="chart-title">Monthly charge distribution</div><div class="chart-sub">Customer count per $2 band</div>
+    <div class="chart-card span2"><div class="chart-title">Monthly Charge Distribution</div><div class="chart-sub">Customer count per $2 band</div>
       <div class="chart-wrap"><canvas id="chDist"></canvas></div></div>
-    <div class="chart-card"><div class="chart-title">Churn rate by support load</div><div class="chart-sub">Tickets per month, banded</div>
+    <div class="chart-card"><div class="chart-title">Churn Rate by Support Load Band</div><div class="chart-sub">Tickets per month, banded</div>
       <div class="chart-wrap"><canvas id="chSupport"></canvas></div></div>
 
-    <div class="chart-card span2"><div class="chart-title">Churn rate by satisfaction band</div><div class="chart-sub">Derived from user rating (incl. imputed)</div>
+    <div class="chart-card span2"><div class="chart-title">Churn Rate by Satisfaction Band</div><div class="chart-sub">Derived from user rating (incl. imputed)</div>
       <div class="chart-wrap"><canvas id="chSat"></canvas></div></div>
-    <div class="chart-card"><div class="chart-title">Device mix</div><div class="chart-sub">Registered device type</div>
+    <div class="chart-card"><div class="chart-title">Customer Distribution by Registered Device</div><div class="chart-sub">Registered device type</div>
       <div class="chart-wrap"><canvas id="chDevice"></canvas></div></div>
   `;
 
@@ -610,7 +682,7 @@ function renderCharts(){
       data:{ labels:d.labels, datasets:[{ data:d.rates.map(r=>+(r*100).toFixed(1)), backgroundColor:COLORS.teal, borderRadius:4 }]},
       options: withPctTooltip(opt) });
   }
-  // Monthly charge distribution histogram
+  // Monthly Charge Distribution histogram
   {
     const charges = rows.map(r=>Number(r.MonthlyCharges)).filter(v=>!isNaN(v));
     const min = Math.min(...charges), max = Math.max(...charges);
@@ -636,7 +708,7 @@ function renderCharts(){
       data:{ labels:d.labels, datasets:[{ data:d.rates.map(r=>+(r*100).toFixed(1)), backgroundColor:[COLORS.coral,COLORS.amber,COLORS.teal], borderRadius:4 }]},
       options: withPctTooltip(opt) });
   }
-  // Device mix
+  // Customer Distribution by Registered Device
   {
     const d = countBy(rows,'DeviceRegistered');
     charts.chDevice = new Chart(document.getElementById('chDevice'),{ type:'doughnut',
@@ -657,6 +729,264 @@ function refreshDashboard(){
   updateFilterNote();
   renderKPIs();
   renderCharts();
+}
+
+/* ---------------------------------------------------------------------
+   Churn prediction model — lightweight browser-side logistic regression
+   --------------------------------------------------------------------- */
+const MODEL_NUMERIC = [
+  'AccountAge','MonthlyCharges','TotalCharges','ViewingHoursPerWeek',
+  'AverageViewingDuration','ContentDownloadsPerMonth','WatchlistSize',
+  'UserRating','SupportTicketsPerMonth'
+];
+const MODEL_CATEGORICAL = [
+  'TenureBand','SubscriptionType','PaymentMethod','PaperlessBilling',
+  'CustomerValueTier','ContentType','GenrePreference','MultiDeviceAccess',
+  'DeviceRegistered','EngagementLevel','RatingGiven','SatisfactionBand',
+  'SupportLoadBand','Gender','ParentalControl','SubtitlesEnabled'
+];
+const MODEL_THRESHOLD = 0.25;
+
+function catValue(v){
+  if (v===undefined || v===null) return 'Unknown';
+  if (typeof v === 'number' && !Number.isFinite(v)) return 'Unknown';
+  const s = String(v).trim();
+  return (!s || s.toLowerCase()==='nan') ? 'Unknown' : s;
+}
+function numValue(v){
+  const n = Number(v);
+  return Number.isFinite(n) ? n : NaN;
+}
+function medianNum(arr){
+  const a = arr.filter(Number.isFinite).slice().sort((x,y)=>x-y);
+  if (!a.length) return 0;
+  const m = Math.floor(a.length/2);
+  return a.length%2 ? a[m] : (a[m-1]+a[m])/2;
+}
+function meanNum(arr){
+  const a = arr.filter(Number.isFinite);
+  return a.length ? a.reduce((x,y)=>x+y,0)/a.length : 0;
+}
+function stdNum(arr,mu){
+  const a = arr.filter(Number.isFinite);
+  if (a.length<2) return 1;
+  const v = a.reduce((s,x)=>s+(x-mu)*(x-mu),0)/a.length;
+  const d = Math.sqrt(v);
+  return d > 1e-9 ? d : 1;
+}
+function sigmoid(z){
+  const x = Math.max(-35,Math.min(35,z));
+  return 1/(1+Math.exp(-x));
+}
+function seededRng(seed){
+  let t = seed >>> 0;
+  return function(){ t += 0x6D2B79F5; let r = Math.imul(t ^ (t>>>15), 1 | t); r ^= r + Math.imul(r ^ (r>>>7), 61 | r); return ((r ^ (r>>>14)) >>> 0) / 4294967296; };
+}
+function shuffleInPlace(arr,rng){
+  for(let i=arr.length-1;i>0;i--){ const j=Math.floor(rng()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
+}
+function logit(p){
+  const x=Math.min(.999999,Math.max(.000001,p));
+  return Math.log(x/(1-x));
+}
+
+function makeStratifiedSplit(rows, seed=42){
+  const pos=[], neg=[];
+  rows.forEach((r,i)=>{ isChurned(r) ? pos.push(i) : neg.push(i); });
+  const rng=seededRng(seed);
+  shuffleInPlace(pos,rng); shuffleInPlace(neg,rng);
+  const posCut=Math.max(1,Math.floor(pos.length*.8));
+  const negCut=Math.max(1,Math.floor(neg.length*.8));
+  const train=pos.slice(0,posCut).concat(neg.slice(0,negCut));
+  const test=pos.slice(posCut).concat(neg.slice(negCut));
+  shuffleInPlace(train,rng); shuffleInPlace(test,rng);
+  return {train,test};
+}
+
+function fitFeatureState(trainRows){
+  const numericStats={};
+  const categoricalValues={};
+  const featureNames=[];
+
+  MODEL_NUMERIC.forEach(k=>{
+    const vals=trainRows.map(r=>numValue(r[k])).filter(Number.isFinite);
+    const median=medianNum(vals);
+    const filled=trainRows.map(r=>{const n=numValue(r[k]); return Number.isFinite(n)?n:median;});
+    const mu=meanNum(filled), sd=stdNum(filled,mu);
+    numericStats[k]={median,mean:mu,std:sd};
+    featureNames.push(k);
+  });
+
+  MODEL_CATEGORICAL.forEach(k=>{
+    const vals=Array.from(new Set(trainRows.map(r=>catValue(r[k])))).sort();
+    categoricalValues[k]=vals;
+    vals.forEach(v=>featureNames.push(k+'='+v));
+  });
+  return {numericStats,categoricalValues,featureNames};
+}
+
+function encodeRows(rows, fs){
+  return rows.map(r=>{
+    const out=[];
+    MODEL_NUMERIC.forEach(k=>{
+      const st=fs.numericStats[k];
+      const n=numValue(r[k]);
+      const v=Number.isFinite(n)?n:st.median;
+      out.push((v-st.mean)/st.std);
+    });
+    MODEL_CATEGORICAL.forEach(k=>{
+      const v=catValue(r[k]);
+      fs.categoricalValues[k].forEach(c=>out.push(v===c?1:0));
+    });
+    return out;
+  });
+}
+
+function rocAuc(labels, probs){
+  let pos=0,neg=0;
+  for(const y of labels){ if(y===1) pos++; else neg++; }
+  if(!pos || !neg) return 0.5;
+  const pairs=labels.map((y,i)=>({y,p:probs[i]})).sort((a,b)=>b.p-a.p);
+  let tp=0,auc=0;
+  for(const item of pairs){
+    if(item.y===1) tp++;
+    else auc += tp;
+  }
+  return auc/(pos*neg);
+}
+function metricSummary(y,p,threshold=MODEL_THRESHOLD){
+  let tp=0,tn=0,fp=0,fn=0;
+  y.forEach((v,i)=>{
+    const pred=p[i]>=threshold?1:0;
+    if(v===1 && pred===1) tp++;
+    else if(v===0 && pred===0) tn++;
+    else if(v===0 && pred===1) fp++;
+    else fn++;
+  });
+  const accuracy=(tp+tn)/(y.length||1);
+  const precision=tp/(tp+fp||1);
+  const recall=tp/(tp+fn||1);
+  const f1=(2*precision*recall)/(precision+recall||1);
+  return {tp,tn,fp,fn,accuracy,precision,recall,f1,auc:rocAuc(y,p)};
+}
+
+function fitPredictionModel(rows){
+  if(!Array.isArray(rows) || rows.length<50) return null;
+  const clean=rows.filter(r=>Number(r.Churn)===0 || Number(r.Churn)===1);
+  if(clean.length<50 || new Set(clean.map(r=>Number(r.Churn))).size<2) return null;
+  const split=makeStratifiedSplit(clean,42);
+  if(!split.test.length) return null;
+  const trainRows=split.train.map(i=>clean[i]);
+  const testRows=split.test.map(i=>clean[i]);
+  const yTrain=trainRows.map(r=>Number(r.Churn));
+  const yTest=testRows.map(r=>Number(r.Churn));
+  const fs=fitFeatureState(trainRows);
+  const X=encodeRows(trainRows,fs), Xt=encodeRows(testRows,fs);
+  const m=fs.featureNames.length;
+  const w=new Array(m).fill(0);
+  let b=logit(meanNum(yTrain));
+  const lr=.05, l2=.01, epochs=2000;
+
+  for(let epoch=0;epoch<epochs;epoch++){
+    const gradW=new Array(m).fill(0);
+    let gradB=0;
+    for(let i=0;i<X.length;i++){
+      let z=b;
+      for(let j=0;j<m;j++) z+=X[i][j]*w[j];
+      const err=sigmoid(z)-yTrain[i];
+      gradB+=err;
+      for(let j=0;j<m;j++) gradW[j]+=X[i][j]*err;
+    }
+    const n=X.length;
+    const step=lr/n;
+    for(let j=0;j<m;j++) w[j]-=step*gradW[j]+lr*l2*w[j];
+    b-=step*gradB;
+  }
+
+  const probs=Xt.map(row=>sigmoid(b+row.reduce((s,v,j)=>s+v*w[j],0)));
+  const metrics=metricSummary(yTest,probs,MODEL_THRESHOLD);
+  const coeffs=fs.featureNames.map((name,i)=>({name,value:w[i]})).sort((a,b)=>Math.abs(b.value)-Math.abs(a.value));
+  return {
+    featureState:fs, weights:w, bias:b,
+    trainCount:trainRows.length, testCount:testRows.length,
+    totalCount:clean.length, threshold:MODEL_THRESHOLD,
+    metrics, coefficients:coeffs,
+    trainedAt:new Date().toISOString()
+  };
+}
+
+function scoreCustomer(row,model){
+  if(!model) return null;
+  const x=encodeRows([row],model.featureState)[0];
+  return sigmoid(model.bias+x.reduce((s,v,j)=>s+v*model.weights[j],0));
+}
+
+function renderPredictionPanel(){
+  const metricsEl=document.getElementById('modelMetrics');
+  const select=document.getElementById('predCustomerSelect');
+  const summary=document.getElementById('modelSummary');
+  const matrix=document.getElementById('confusionMatrix');
+  const coefList=document.getElementById('coefList');
+  if(!metricsEl||!select||!summary||!matrix||!coefList) return;
+
+  if(!state.model){
+    metricsEl.innerHTML=`<div class="metric-card"><div class="metric-label">Model status</div><div class="metric-value">Not ready</div></div>`;
+    summary.textContent='A labeled dataset with a binary Churn column is required to train the model.';
+    matrix.innerHTML=''; coefList.innerHTML=''; select.innerHTML='';
+    return;
+  }
+  const m=state.model.metrics;
+  const metrics=[
+    ['Accuracy',fmtPct(m.accuracy)],['Precision',fmtPct(m.precision)],['Recall',fmtPct(m.recall)],
+    ['F1 Score',fmtPct(m.f1)],['ROC-AUC',fmtPct(m.auc)]
+  ];
+  metricsEl.innerHTML=metrics.map(([label,value])=>`<div class="metric-card"><div class="metric-label">${label}</div><div class="metric-value">${value}</div></div>`).join('');
+
+  const current=select.value;
+  select.innerHTML=state.data.map((r,i)=>`<option value="${i}">${String(r.CustomerID??('Customer '+(i+1)))} — ${String(r.SubscriptionType??'Unknown')} — ${String(r.ContentType??'Unknown')}</option>`).join('');
+  if(current && Number(current)<state.data.length) select.value=current;
+
+  matrix.innerHTML=`<div class="matrix">
+    <div><div class="m-label">True Negative</div><div class="m-value">${fmtNum(m.tn)}</div></div>
+    <div><div class="m-label">False Positive</div><div class="m-value">${fmtNum(m.fp)}</div></div>
+    <div><div class="m-label">False Negative</div><div class="m-value">${fmtNum(m.fn)}</div></div>
+    <div><div class="m-label">True Positive</div><div class="m-value">${fmtNum(m.tp)}</div></div>
+  </div>`;
+
+  summary.innerHTML=`Model: <strong>Logistic Regression</strong><br>
+    Training rows: <strong>${fmtNum(state.model.trainCount)}</strong> · Holdout rows: <strong>${fmtNum(state.model.testCount)}</strong> · Features used: <strong>${fmtNum(state.model.featureState.featureNames.length)}</strong><br>
+    Decision threshold: <strong>${fmtPct(state.model.threshold)}</strong>. Lowering the threshold is intended to flag more potential churn cases; it does not prove that a customer will churn.<br>
+    The scores are generated from historical labeled data and should be treated as model estimates, not causal conclusions or guarantees.`;
+
+  const top=state.model.coefficients.slice(0,8);
+  coefList.innerHTML=top.map(c=>`<div class="coef-item"><span class="coef-name" title="${c.name}">${c.name}</span><span class="coef-val">${c.value>=0?'+':''}${c.value.toFixed(2)}</span></div>`).join('');
+
+  runPrediction();
+}
+
+function runPrediction(){
+  const select=document.getElementById('predCustomerSelect');
+  const result=document.getElementById('predictionResult');
+  if(!select||!result||!state.model||!state.data.length) return;
+  const idx=Math.max(0,Math.min(state.data.length-1,Number(select.value)||0));
+  const row=state.data[idx];
+  const p=scoreCustomer(row,state.model);
+  if(p===null) return;
+  const label=p>=state.model.threshold?'Churn risk flagged':'Retained risk';
+  const tier=p>=.50?'High':(p>=state.model.threshold?'Medium':'Low');
+  const cls=tier==='High'?'risk-high':tier==='Medium'?'risk-medium':'risk-low';
+  result.classList.add('show');
+  result.innerHTML=`<div class="pred-caption">Model-estimated churn score for <strong>${String(row.CustomerID??'Selected customer')}</strong></div>
+    <div class="pred-score">${fmtPct(p)}</div>
+    <div class="risk-badge ${cls}">${tier} Risk · ${label}</div>`;
+}
+
+function trainAndRenderPrediction(){
+  if(state.hasChurnColumn){
+    const fitted=fitPredictionModel(state.data);
+    if(fitted) state.model=fitted;
+  }
+  renderPredictionPanel();
 }
 
 /* ---------------------------------------------------------------------
@@ -793,6 +1123,7 @@ function loadNewDataset(rows, sourceLabel){
   renderFilterBar();
   refreshDashboard();
   renderExplorer();
+  trainAndRenderPrediction();
 }
 
 function handleFile(file){
@@ -813,6 +1144,9 @@ function handleFile(file){
   };
   reader.readAsBinaryString(file);
 }
+document.getElementById('btnRunPrediction').addEventListener('click', runPrediction);
+document.getElementById('predCustomerSelect').addEventListener('change', runPrediction);
+
 const fileInput = document.getElementById('fileInput');
 document.getElementById('btnUploadDash').addEventListener('click', ()=>fileInput.click());
 document.getElementById('btnUploadExplorer').addEventListener('click', ()=>fileInput.click());
@@ -828,6 +1162,7 @@ function init(){
   refreshDashboard();
   renderExplorer();
   bindExplorerControls();
+  trainAndRenderPrediction();
 }
 init();
 
